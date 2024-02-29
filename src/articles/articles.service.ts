@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -43,8 +43,8 @@ export class ArticlesService {
     return await this.articlesRepository.save(articleToUpdate);
   }
 
-  async remove(id: number) {
-    const articleToDelete = await this.articlesRepository.findOneBy({id});
+  async remove(author: string, id: number) {
+    const articleToDelete = await this.articlesRepository.findOneBy({author, id});
 
     if (!articleToDelete) {
       throw new NotFoundException(`Article with ID ${id} not found`);
@@ -53,7 +53,7 @@ export class ArticlesService {
     const deleteResult = await this.articlesRepository.delete(id);
 
     if (deleteResult.affected === 0) {
-      throw new BadRequestException(`The Article with ID ${id} could not be deleted`);
+      throw new InternalServerErrorException(`An error occurred and the article with ID ${id} could not be deleted`);
     }
 
     return articleToDelete;

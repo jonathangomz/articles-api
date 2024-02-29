@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -10,7 +10,12 @@ export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Post('/:author')
-  create(@Param('author') author: string, @Body() createArticleDto: CreateArticleDto) {
+  create(@Req() request, @Param('author') author: string, @Body() createArticleDto: CreateArticleDto) {
+    const authenticatedUser = request.user;
+    if(authenticatedUser.username !== author) {
+      throw new UnauthorizedException();
+    }
+
     return this.articlesService.create(author, createArticleDto);
   }
 
@@ -25,12 +30,22 @@ export class ArticlesController {
   }
 
   @Patch('/:author/:id')
-  update(@Param('author') author: string, @Param('id', new ParseIntPipe()) id: number, @Body() updateArticleDto: UpdateArticleDto) {
+  update(@Req() request, @Param('author') author: string, @Param('id', new ParseIntPipe()) id: number, @Body() updateArticleDto: UpdateArticleDto) {
+    const authenticatedUser = request.user;
+    if(authenticatedUser.username !== author) {
+      throw new UnauthorizedException();
+    }
+
     return this.articlesService.update(author, id, updateArticleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', new ParseIntPipe()) id: number) {
-    return this.articlesService.remove(id);
+  @Delete('/:author/:id')
+  remove(@Req() request, @Param('author') author: string, @Param('id', new ParseIntPipe()) id: number) {
+    const authenticatedUser = request.user;
+    if(authenticatedUser.username !== author) {
+      throw new UnauthorizedException();
+    }
+    
+    return this.articlesService.remove(author, id);
   }
 }
