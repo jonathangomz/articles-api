@@ -14,6 +14,6 @@ export class Article {
   @Column({ default: () => "GETDATE()" })
   date: Date;
 
-  @Column()
+  @Column({length: 'MAX'})
   content: string;
 }

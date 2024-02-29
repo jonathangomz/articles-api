@@ -1,13 +1,19 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-import { ArticleType } from './Article';
+import { Body, Controller, Post } from '@nestjs/common';
+import { AuthService } from './services/auth/auth.service';
+import { CreateUserDto } from './users/dto/create-user.dto';
+import { LoginUserDto } from './users/dto/login-user.dto';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @Get()
-  getHello() {
-    return this.appService.getHello();
+  @Post('auth/signup')
+  signup (@Body() newUser: CreateUserDto) {
+    return this.authService.signup(newUser);
+  }
+
+  @Post('auth/login')
+  login(@Body() user: LoginUserDto) {
+    return this.authService.login(user);
   }
 }
