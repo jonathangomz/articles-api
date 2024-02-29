@@ -1,13 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Req, UnauthorizedException, Query } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { JwtAuthGuard } from 'src/services/auth/guards/jwt.guards';
+import { FilterArticleDto } from './dto/filter-article.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('articles')
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
+
+  @Get()
+  findAll(@Query() queries: FilterArticleDto) {
+    return this.articlesService.findAll(queries);
+  }
 
   @Post('/:author')
   create(@Req() request, @Param('author') author: string, @Body() createArticleDto: CreateArticleDto) {

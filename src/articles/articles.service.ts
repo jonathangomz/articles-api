@@ -2,8 +2,9 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Article } from './entities/article.entity';
+import { FilterArticleDto } from './dto/filter-article.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -29,6 +30,16 @@ export class ArticlesService {
     }
 
     return article;
+  }
+
+  async findAll(queries: FilterArticleDto) {
+    const where = {};
+
+    for(let [key, value] of Object.entries(queries)) {
+      where[key] = Like(`%${value}%`);
+    }
+
+    return await this.articlesRepository.find({ where });
   }
 
   async update(author: string, id: number, updateArticleDto: UpdateArticleDto) {
