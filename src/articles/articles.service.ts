@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,15 +21,21 @@ export class ArticlesService {
     return article;
   }
 
-  findOne(author: string, id: number) {
-    return this.articlesRepository.findOneBy({author, id});
+  async findOne(author: string, id: number) {
+    const article = await this.articlesRepository.findOneBy({author, id});
+    
+    if (!article) {
+      throw new NotFoundException(`Article with ID ${id} not found`);
+    }
+
+    return article;
   }
 
   async update(author: string, id: number, updateArticleDto: UpdateArticleDto) {
     const articleToUpdate = await this.articlesRepository.findOneBy({author, id});
         
     if (!articleToUpdate) {
-        throw new Error(`Entity with ID ${id} not found`);
+      throw new NotFoundException(`Article with ID ${id} not found`);
     }
 
     this.articlesRepository.merge(articleToUpdate, updateArticleDto);
@@ -41,13 +47,13 @@ export class ArticlesService {
     const articleToDelete = await this.articlesRepository.findOneBy({id});
 
     if (!articleToDelete) {
-      throw new Error(`Entity with ID ${id} not found`);
+      throw new NotFoundException(`Article with ID ${id} not found`);
     }
 
     const deleteResult = await this.articlesRepository.delete(id);
 
     if (deleteResult.affected === 0) {
-      throw new Error(`Entity with ID ${id} not found`);
+      throw new BadRequestException(`The Article with ID ${id} could not be deleted`);
     }
 
     return articleToDelete;
