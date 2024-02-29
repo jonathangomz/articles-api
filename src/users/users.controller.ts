@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { NotFoundError } from 'rxjs';
 import { JwtAuthGuard } from 'src/services/auth/guards/jwt.guards';
 
 @UseGuards(JwtAuthGuard)
