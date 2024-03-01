@@ -39,7 +39,7 @@ export class ArticlesService {
       where[key] = Like(`%${value}%`);
     }
 
-    return await this.articlesRepository.find({ where });
+    return await this.articlesRepository.find({ where, order: { date: 'DESC' } });
   }
 
   async update(author: string, id: number, updateArticleDto: UpdateArticleDto) {
