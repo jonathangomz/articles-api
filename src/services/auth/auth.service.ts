@@ -32,10 +32,7 @@ export class AuthService {
       password: hassedPassword,
     });
 
-    return {
-      username: newUser.username,
-      email: newUser.email
-    }
+    return this.login(newUser);
   }
 
   async login(loginUser: LoginUserDto) {
