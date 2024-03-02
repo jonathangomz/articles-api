@@ -8,7 +8,7 @@ Backend of the articles project developed with Nestjs and SQL Server.
 - [x] Add articles controller
 - [x] Add users controller
 - [X] Add authentication
-- [ ] Add Swagger
+- [X] Add Swagger
 - [ ] Improve configuration
 - [ ] Return max 70 characters for the content to reduce respose size?
 - [ ] Improve error messages
