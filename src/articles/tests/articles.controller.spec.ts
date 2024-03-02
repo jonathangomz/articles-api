@@ -28,11 +28,12 @@ describe('ArticlesController', () => {
       const author = 'John Doe';
       const id = 1;
       const createArticleDto = { title: 'Title', content: 'Content' };
+      const request = { user: 'John Doe' };
       const createdArticle = {id, author, date: new Date(), ...createArticleDto};
 
       jest.mocked(service.create).mockResolvedValue(createdArticle);
 
-      const result = await controller.create(author, createArticleDto);
+      const result = await controller.create(request, author, createArticleDto);
 
       expect(service.create).toHaveBeenCalledWith(author, createArticleDto);
       expect(result).toBe(createdArticle);
@@ -72,12 +73,13 @@ describe('ArticlesController', () => {
     it('should update an existing article', async () => {
       const author = 'John Doe';
       const id = 1;
+      const request = { user: 'John Doe' };
       const updateArticleDto: UpdateArticleDto = { title: 'Updated Title', content: 'Updated Content' };
       const updatedArticle = {id, author, date: new Date(), title: updateArticleDto.title, content: updateArticleDto.content};
 
       jest.mocked(service.update).mockResolvedValue(updatedArticle);
 
-      const result = await controller.update(author, id, updateArticleDto);
+      const result = await controller.update(request, author, id, updateArticleDto);
 
       expect(service.update).toHaveBeenCalledWith(author, id, updateArticleDto);
       expect(result).toBe(updatedArticle);
@@ -86,11 +88,12 @@ describe('ArticlesController', () => {
     it('should throw an error if article to update is not found', async () => {
       const author = 'John Doe';
       const id = 1;
+      const request = { user: 'John Doe' };
       const updateArticleDto: UpdateArticleDto = { title: 'Updated Title', content: 'Updated Content' };
 
       jest.mocked(service.update).mockRejectedValue(new Error(`Entity with ID ${id} not found`));
 
-      await expect(controller.update(author, id, updateArticleDto)).rejects.toThrow(`Entity with ID ${id} not found`);
+      await expect(controller.update(request, author, id, updateArticleDto)).rejects.toThrow(`Entity with ID ${id} not found`);
 
       expect(service.update).toHaveBeenCalledWith(author, id, updateArticleDto);
     });
@@ -99,11 +102,12 @@ describe('ArticlesController', () => {
   describe('remove', () => {
     it('should remove an article by id', async () => {
       const id = 1;
+      const request = { user: 'John Doe' };
       const deleteResult = {id, author: 'John Doe', title: 'title', content: 'content', date: new Date()};
 
       jest.mocked(service.remove).mockResolvedValue(deleteResult);
 
-      const result = await controller.remove(id);
+      const result = await controller.remove(request, deleteResult.author, id);
 
       expect(service.remove).toHaveBeenCalledWith(id);
       expect(result).toBe(deleteResult);

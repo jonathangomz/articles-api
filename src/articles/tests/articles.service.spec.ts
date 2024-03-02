@@ -113,7 +113,7 @@ describe('ArticlesService', () => {
       mockRepository.findOneBy.mockResolvedValue(deleteResult);
       mockRepository.delete.mockResolvedValue({deleteResult: {affected: 1}});
 
-      const result = await service.remove(id);
+      const result = await service.remove(deleteResult.author, id);
 
       expect(mockRepository.delete).toHaveBeenCalledWith(id);
       expect(result).toBe(deleteResult);
