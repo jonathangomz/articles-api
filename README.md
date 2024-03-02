@@ -1,4 +1,4 @@
-# Articles
+# Articles Backend
 
 ## Description
 Backend of the articles project developed with Nestjs and SQL Server.
@@ -10,16 +10,40 @@ Backend of the articles project developed with Nestjs and SQL Server.
 - [X] Add authentication
 - [X] Add Swagger
 - [ ] Improve configuration
-- [ ] Return max 70 characters for the content to reduce respose size?
+- [ ] ~~Return max 70 characters for the content to reduce respose size?~~
 - [ ] Improve error messages
 
-## Installation
+## Run the project
+
+This project can work independetly but you can check this other [frontend project](https://github.com/jonathangomz/articles) that implements this API.
+
+- Clone the repository
 
 ```bash
-$ npm install
+git clone https://github.com/jonathangomz/articles-api.git
+
+cd articles-api
 ```
 
-## Running the app
+- Install dependencies
+
+```bash
+npm install
+```
+
+- Create you `.env.local` file in the root directory with the next properties (you can copy and paste and modify the values):
+```
+DB_SERVER=<sql_database_server>
+DB_PORT=<sql_database_port>
+DB_USERNAME=<sql_database_username>
+DB_PASSWORD=<sql_database_password>
+DB_DATABASE=<sql_database_name>
+SECRET=<jwt_secret>
+EXPIRATION_TIME=<jwt_expiration_time_1h>
+SALT_OR_ROUNDS=<jwt_number_of_salt_or_rounds>
+```
+
+- Run
 
 ```bash
 # development
@@ -37,9 +61,6 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
